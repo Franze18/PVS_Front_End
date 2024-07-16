@@ -17,6 +17,5 @@ void main() => runApp(MaterialApp(
     '/cart' : (context) => MyHomePage(),
     '/favorite' : (context) => Favorite(),
     '/profile' : (context) => Profile(),
-
   },
 ));
