@@ -8,13 +8,13 @@ import 'package:pvsfronend/pages/Signtwo.dart';
 import 'package:pvsfronend/pages/profile.dart';
 
 void main() => runApp(MaterialApp(
-  initialRoute:'/dashboard',
+  initialRoute:'/cart',
   routes:{
     '/signup':(context)=>Signup(),
     '/login' : (context) =>Login(),
     '/dashboard' : (context) =>Dashboard(),
     '/signtwo' : (context) => Signtwo(),
-    '/cart' : (context) => Cart(),
+    '/cart' : (context) => MyHomePage(),
     '/favorite' : (context) => Favorite(),
     '/profile' : (context) => Profile(),
 
