@@ -14,6 +14,7 @@ class Product {
     required this.imageUrl,
     required this.price,
   });
+
 }
 
 class MyApp extends StatelessWidget {

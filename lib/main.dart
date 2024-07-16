@@ -18,6 +18,5 @@ void main() => runApp(MaterialApp(
     '/favorite' : (context) => Favorite(),
     '/profile' : (context) => Profile(),
 
-
   },
 ));
