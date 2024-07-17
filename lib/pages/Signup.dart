@@ -142,6 +142,7 @@ class _SignupState extends State<Signup> {
                 onSaved: (value){
                   password = value!;
                 },
+
               ),
               SizedBox(height: 16.0),
               SizedBox(height: 16.0),
