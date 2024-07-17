@@ -11,11 +11,11 @@ class Signup extends StatefulWidget {
 
 class _SignupState extends State<Signup> {
   final formKey = GlobalKey <FormState>();
-  String firstname = '';
-  String middlename = '';
-  String lastname ='';
-  String address ='';
-  String phonenumber ='';
+  String username = '';
+  String email = '';
+  String password ='';
+  bool _obscure = true;
+  IconData _obscureIcon = Icons.visibility_off;
 
 
   @override
@@ -38,99 +38,52 @@ class _SignupState extends State<Signup> {
       body:Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(height: 40.0),
               Text(
                 'Create an Account',
                 style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 16.0),
+              SizedBox(height: 20.0),
               Text(
                 'Personal Information',
                 style: TextStyle(fontSize: 15.0,
                 fontWeight: FontWeight.bold),
                 textAlign: TextAlign.start,
               ),
-              SizedBox(height: 16.0),
-              TextFormField(
-                style: TextStyle(color: Colors.black),
-                decoration: InputDecoration(
-                    label: Text(
-                      'First Name',
-                      style:TextStyle(color: Colors.black),
-                    ),
-                    prefixIcon: Icon(Icons.person),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)
-                    )
-                ),
-                validator: (value){
-                  if(value == null|| value.isEmpty){
-                    return 'Provide your Firstname';
-                  }
-                  return null;
-                },
-                onSaved: (value){
-                  firstname = value!;
-                },
-              ),
-              SizedBox(height: 16.0),
+              SizedBox(height: 20.0),
               TextFormField(
                 style: TextStyle(color: Colors.black),
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   label: Text(
-                    'Middle Name',
+                    'Username',
                     style:TextStyle(color: Colors.black),
                   ),
-                  prefixIcon: Icon(Icons.email),
+                  prefixIcon: Icon(Icons.person),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0)
                   ),
                 ),
                 validator: (value){
-                  if(value == null|| value.isEmpty){
-                    return 'Provide your Lastname';
+                  if (value == null || value.isEmpty){
+                    return 'Provide an username';
                   }
                   return null;
                 },
                 onSaved: (value){
-                  middlename = value!;
+                  username = value!;
                 },
               ),
-              SizedBox(height: 16.0),
+              SizedBox(height: 20.0),
               TextFormField(
                 style: TextStyle(color: Colors.black),
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   label: Text(
-                    'Last Name',
-                    style:TextStyle(color: Colors.black),
-                  ),
-                  prefixIcon: Icon(Icons.email),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0)
-                  ),
-                ),
-                validator: (value){
-                  if(value == null|| value.isEmpty){
-                    return 'Provide your Lastname';
-                  }
-                  return null;
-                },
-                onSaved: (value){
-                  lastname = value!;
-                },
-              ),
-              SizedBox(height: 16.0),
-              TextFormField(
-                style: TextStyle(color: Colors.black),
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  label: Text(
-                    'Address',
+                    'Email',
                     style:TextStyle(color: Colors.black),
                   ),
                   prefixIcon: Icon(Icons.email),
@@ -140,50 +93,66 @@ class _SignupState extends State<Signup> {
                 ),
                 validator: (value){
                   if (value == null || value.isEmpty){
-                    return 'Provide an Address';
+                    return 'Provide an email';
                   }
                   return null;
                 },
                 onSaved: (value){
-                  address = value!;
+                  email = value!;
                 },
               ),
               SizedBox(height: 16.0),
               TextFormField(
-                style: TextStyle(color: Colors.black),
-                keyboardType: TextInputType.emailAddress,
+                obscureText: _obscure,
                 decoration: InputDecoration(
                   label: Text(
-                    'Phone Number',
+                    'Password',
                     style:TextStyle(color: Colors.black),
                   ),
-                  prefixIcon: Icon(Icons.email),
+                  prefixIcon: Icon(Icons.lock_rounded),
+                  suffixIcon: IconButton(
+                    icon: Icon(_obscureIcon),
+                    onPressed:(){
+                      setState(() {
+                        _obscure = !_obscure;
+                        if(_obscure){
+                          _obscureIcon = Icons.visibility_off;
+                        }else{
+                          _obscureIcon = Icons.visibility;
+                        }
+                      });
+                    },
+                  ),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0)
                   ),
                 ),
                 validator: (value){
-                  if(value == null|| value.isEmpty){
-                    return 'Provide your Firstname';
+                  if(value==null|| value.isEmpty){
+                    return'Provide a password';
                   }
-                  if(value.length <10){
-                    return '11 characters long';
+                  if (value.length <8){
+                    return'password should be atleast 8 characters long';
+                  }
+                  if (value.length>20){
+                    return'Password must be 20 characters long';
                   }
                   return null;
                 },
                 onSaved: (value){
-                  phonenumber = value!;
+                  password = value!;
                 },
               ),
               SizedBox(height: 16.0),
+              SizedBox(height: 16.0),
               ElevatedButton(
-                onPressed: () {Navigator.pushReplacementNamed(context, '/signtwo');},
-                child: Text('Next', style: TextStyle(color: Colors.white), ),
+                onPressed: () {Navigator.pushReplacementNamed(context, '/');},
+                child: Text('Create Account', style: TextStyle(color: Colors.white), ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
                 ),
               ),
-              SizedBox(height: 16.0),
+              SizedBox(height: 20.0),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -215,7 +184,7 @@ class _SignupState extends State<Signup> {
             ),
           ],
         ),
-        SizedBox(height: 25.0,),
+        SizedBox(height: 20.0,),
               ElevatedButton(
                 onPressed: (){},
                 child: Row(
