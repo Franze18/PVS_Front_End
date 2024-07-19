@@ -1,6 +1,9 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-import '../Service/User.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:pvsfronend/Service/User.dart';
+
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -17,7 +20,20 @@ class _SignupState extends State<Signup> {
   bool _obscure = true;
   IconData _obscureIcon = Icons.visibility_off;
 
-
+  createAccount(User user) async{
+    final response = await http.post(
+      Uri.parse('http://10.0.2.2:8080/api/v1/auth/register/user'),
+      headers : <String, String>{
+        'Content-Type' : 'application/json; charter=UTF-8'
+      },
+      body: jsonEncode(<String, dynamic>{
+        'username' : user.username,
+        'email' : user.email,
+        'password' : user.password
+      }),
+    );
+    print(response.body);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +72,6 @@ class _SignupState extends State<Signup> {
               SizedBox(height: 20.0),
               TextFormField(
                 style: TextStyle(color: Colors.black),
-                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   label: Text(
                     'Username',

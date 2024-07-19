@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:pvsfronend/Service/User.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -14,6 +18,27 @@ class _LoginState extends State<Login> {
   bool _obscure = true;
   IconData _obscureIcon = Icons.visibility_off;
 
+
+  Widget buttonContent = Text('Login');
+  Widget LoadingDisplay = CircularProgressIndicator();
+
+  Future <bool>login(User user) async{
+    final response = await http.post(
+      Uri.parse('http://10.0.2.2:8080/api/v1/auth/login'),
+      headers: <String, String>{
+        'Content-Type' : 'application/json; charset=UTF-8 '
+      },
+      body: jsonEncode(<String, dynamic>{
+        'usernameOrEmail' : user.email,
+        'password' : user.password
+      }),
+    );
+    if (response.statusCode ==200){
+      return true;
+    }
+    return false;
+    // print(response.body);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
