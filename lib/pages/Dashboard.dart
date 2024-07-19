@@ -10,7 +10,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  String selectedCategory = 'Regular'; // Default selected category
+  String selectedCategory = 'Regular';// Default selected category
   Map<String, List<Map<String, dynamic>>> categoryProducts = {
     'Regular': [
       {
@@ -569,7 +569,20 @@ class _ProductDetailsState extends State<ProductDetails> {
                   ],
                 ),
               ],
-            )
+            ),
+        Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(height: 15),
+            ElevatedButton(
+              onPressed: () {Navigator.pushReplacementNamed(context, '/cart');},
+              child: Text('Place Order', style: TextStyle(color: Colors.white),),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+              ),
+            ),
+          ],
+        ),
           ],
         ),
       ),
