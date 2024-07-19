@@ -536,7 +536,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               ],
             ),
 
-            SizedBox(height: 10),
+            SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
