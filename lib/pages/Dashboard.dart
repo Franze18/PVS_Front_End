@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(Dashboard());
-}
-
 class Dashboard extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
@@ -246,6 +242,23 @@ class _DashboardState extends State<Dashboard> {
                 ),
                 label: Text(
                   'Profile',
+                  style: TextStyle(color: Colors.black),
+                ),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 100, vertical: 12),
+                ),
+              ),
+              SizedBox(height: 10.0),
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/transaction');
+                },
+                icon: Icon(
+                  Icons.file_download_done_sharp,
+                  color: Colors.black,
+                ),
+                label: Text(
+                  'History',
                   style: TextStyle(color: Colors.black),
                 ),
                 style: ElevatedButton.styleFrom(
