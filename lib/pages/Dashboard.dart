@@ -536,28 +536,40 @@ class _ProductDetailsState extends State<ProductDetails> {
               ],
             ),
 
-            SizedBox(height: 80),
+            SizedBox(height: 10),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                  icon: Icon(Icons.remove),
-                  onPressed: () {
-                    setState(() {
-                      numberOfOrder -= 1;
-                    });
-                  },
+                Text(
+                  'Quantity:',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                Text(numberOfOrder.toString()),
-                IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {
-                    setState(() {
-                      numberOfOrder += 1;
-                    });
-                  },
+                Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.remove),
+                      onPressed: () {
+                        setState(() {
+                          numberOfOrder -= 1;
+                        });
+                      },
+                    ),
+                    Text(
+                      numberOfOrder.toString(),
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.add),
+                      onPressed: () {
+                        setState(() {
+                          numberOfOrder += 1;
+                        });
+                      },
+                    ),
+                  ],
                 ),
               ],
-            ),
+            )
           ],
         ),
       ),
