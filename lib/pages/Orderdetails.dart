@@ -320,7 +320,8 @@ class OrderConfirmationPage extends StatelessWidget {
                       (route) => false,
                 );
               },
-              child: Text('Back to Dashboard'),
+              child: Text('Back to Dashboard',
+              style: TextStyle(color: Colors.black),),
 
             ),
           ],
