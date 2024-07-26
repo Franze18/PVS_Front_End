@@ -86,7 +86,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Quantity: ${transactions[index].quantity.toString()}'),
-                        Text('Price: \$${transactions[index].price.toStringAsFixed(2)}'),
+                        Text('Price: \₱${transactions[index].price.toStringAsFixed(2)}'),
                       ],
                     ),
                     SizedBox(height: 4.0),

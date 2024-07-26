@@ -370,6 +370,36 @@ class _ProductDetailsState extends State<ProductDetails> {
   List<int> selectedChipIndices = [];
   late double totalAmount;
 
+  bool get isOrderButtonEnabled {
+    return selectedSizeIndex != -1 && // Size selected
+        selectedChipIndices.isNotEmpty && // At least one customization selected
+        numberOfOrder > 0; // Quantity is greater than 0
+  }
+
+  void _placeOrder() {
+    if (isOrderButtonEnabled) {
+      // Here you can handle the actual order placement logic
+
+      // Show confirmation
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Order placed successfully!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      // Navigate to cart or order confirmation page
+      Navigator.pushReplacementNamed(context, '/cart');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please complete all required fields.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -583,19 +613,19 @@ class _ProductDetailsState extends State<ProductDetails> {
                 ),
               ],
             ),
-        Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
             SizedBox(height: 15),
-            ElevatedButton(
-              onPressed: () {Navigator.pushReplacementNamed(context, '/cart');},
-              child: Text('Place Order', style: TextStyle(color: Colors.white),),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ElevatedButton(
+                  onPressed: _placeOrder,
+                  child: Text('Place Order', style: TextStyle(color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
           ],
         ),
       ),
