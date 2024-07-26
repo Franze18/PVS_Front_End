@@ -79,9 +79,21 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
-            _buildInfoTile('Name', customerName),
-            _buildInfoTile('Email', customerEmail),
-            _buildInfoTile('Phone Number', customerPhoneNumber),
+            _buildInfoTile('Name', customerName,
+                trailingIcon: Icons.edit, onTap: () {
+                  _editName();
+                }
+            ),
+            _buildInfoTile('Email', customerEmail,
+                trailingIcon: Icons.edit, onTap: () {
+                  _editEmail();
+                }
+            ),
+            _buildInfoTile('Phone Number', customerPhoneNumber,
+                trailingIcon: Icons.edit, onTap: () {
+                  _editPhoneNumber();
+                }
+            ),
             _buildInfoTile('Delivery Address', deliveryAddress,
                 trailingIcon: Icons.edit, onTap: () {
                   _editDeliveryAddress();
@@ -254,6 +266,124 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
               TextField(
                 decoration: InputDecoration(
                   labelText: 'Delivery Address',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    deliveryAddress = value;
+                  });
+                },
+              ),
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Save'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _editPhoneNumber() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Edit your Phone Number',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Phone Number',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    customerPhoneNumber = value;
+                  });
+                },
+              ),
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Save'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+  void _editName() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Edit Your Name',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    customerName = value;
+                  });
+                },
+              ),
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Save'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+  void _editEmail() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Edit your Email',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Email',
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (value) {
