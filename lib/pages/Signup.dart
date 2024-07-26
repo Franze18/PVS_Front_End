@@ -1,9 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:pvsfronend/Service/User.dart';
-
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -13,27 +10,37 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
-  final formKey = GlobalKey <FormState>();
+  final formKey = GlobalKey<FormState>();
   String username = '';
   String email = '';
-  String password ='';
+  String password = '';
   bool _obscure = true;
   IconData _obscureIcon = Icons.visibility_off;
 
-  createAccount(User user) async{
+  createAccount(String username, String email, String password) async {
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:8080/api/v1/auth/register/user'),
-      headers : <String, String>{
-        'Content-Type' : 'application/json; charter=UTF-8'
+      Uri.parse('http://192.168.192.205:8080/api/v1/auth/register/user'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, dynamic>{
-        'username' : user.username,
-        'email' : user.email,
-        'password' : user.password
+        'username': username,
+        'email': email,
+        'password': password,
       }),
     );
-    print(response.body);
+
+    if (response.statusCode == 200) {
+      // Navigate to login screen on successful signup
+      Navigator.pushReplacementNamed(context, '/login');
+    } else {
+      // Handle errors (e.g., user already exists)
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to create account: ${response.body}')),
+      );
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,14 +53,18 @@ class _SignupState extends State<Signup> {
               width: 50.0,
             ),
             SizedBox(width: 10.0),
-            Text('PV Sportswear',
-                style: TextStyle(fontWeight: FontWeight.bold,)),
+            Text(
+              'PV Sportswear',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ],
         ),
       ),
-      body:Padding(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
+        child: Form(
+          key: formKey,
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -65,8 +76,7 @@ class _SignupState extends State<Signup> {
               SizedBox(height: 20.0),
               Text(
                 'Personal Information',
-                style: TextStyle(fontSize: 15.0,
-                fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.start,
               ),
               SizedBox(height: 20.0),
@@ -75,20 +85,20 @@ class _SignupState extends State<Signup> {
                 decoration: InputDecoration(
                   label: Text(
                     'Username',
-                    style:TextStyle(color: Colors.black),
+                    style: TextStyle(color: Colors.black),
                   ),
                   prefixIcon: Icon(Icons.person),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0)
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
-                validator: (value){
-                  if (value == null || value.isEmpty){
-                    return 'Provide an username';
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Provide a username';
                   }
                   return null;
                 },
-                onSaved: (value){
+                onSaved: (value) {
                   username = value!;
                 },
               ),
@@ -99,20 +109,20 @@ class _SignupState extends State<Signup> {
                 decoration: InputDecoration(
                   label: Text(
                     'Email',
-                    style:TextStyle(color: Colors.black),
+                    style: TextStyle(color: Colors.black),
                   ),
                   prefixIcon: Icon(Icons.email),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0)
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
-                validator: (value){
-                  if (value == null || value.isEmpty){
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
                     return 'Provide an email';
                   }
                   return null;
                 },
-                onSaved: (value){
+                onSaved: (value) {
                   email = value!;
                 },
               ),
@@ -122,101 +132,75 @@ class _SignupState extends State<Signup> {
                 decoration: InputDecoration(
                   label: Text(
                     'Password',
-                    style:TextStyle(color: Colors.black),
+                    style: TextStyle(color: Colors.black),
                   ),
                   prefixIcon: Icon(Icons.lock_rounded),
                   suffixIcon: IconButton(
                     icon: Icon(_obscureIcon),
-                    onPressed:(){
+                    onPressed: () {
                       setState(() {
                         _obscure = !_obscure;
-                        if(_obscure){
-                          _obscureIcon = Icons.visibility_off;
-                        }else{
-                          _obscureIcon = Icons.visibility;
-                        }
+                        _obscureIcon = _obscure ? Icons.visibility_off : Icons.visibility;
                       });
                     },
                   ),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0)
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
-                validator: (value){
-                  if(value==null|| value.isEmpty){
-                    return'Provide a password';
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Provide a password';
                   }
-                  if (value.length <8){
-                    return'password should be atleast 8 characters long';
+                  if (value.length < 8) {
+                    return 'Password should be at least 8 characters long';
                   }
-                  if (value.length>20){
-                    return'Password must be 20 characters long';
+                  if (value.length > 20) {
+                    return 'Password must be at most 20 characters long';
                   }
                   return null;
                 },
-                onSaved: (value){
+                onSaved: (value) {
                   password = value!;
                 },
-
               ),
               SizedBox(height: 16.0),
-              SizedBox(height: 16.0),
               ElevatedButton(
-                onPressed: () {Navigator.pushReplacementNamed(context, '/');},
-                child: Text('Create Account', style: TextStyle(color: Colors.white), ),
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    formKey.currentState!.save();
+                    createAccount(username, email, password);
+                  }
+                },
+                child: Text(
+                  'Create Account',
+                  style: TextStyle(color: Colors.white),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
                 ),
               ),
               SizedBox(height: 20.0),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Divider(
-                color: Colors.grey,
-                height: 20,
-                thickness: 1,
-                indent: 8,
-                endIndent: 8,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                "or continue with",
+              Text(
+                "Already have an account?",
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey[700]),
               ),
-            ),
-            Expanded(
-              child: Divider(
-                color: Colors.grey,
-                height: 20,
-                thickness: 1,
-                indent: 8,
-                endIndent: 8,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 20.0,),
+              SizedBox(height: 16.0),
               ElevatedButton(
-                onPressed: (){},
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center ,
-                  children: [
-                    Icon(Icons.g_mobiledata),
-                    SizedBox(width: 10.0,),
-                    Text('Google',),
-                  ],
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/login');
+                },
+                child: Text(
+                  'Proceed to Login',
+                  style: TextStyle(color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey[300],
-                    foregroundColor: Colors.black
+                  backgroundColor: Colors.blueAccent[700],
                 ),
               ),
-            ]
+            ],
+          ),
         ),
       ),
     );
