@@ -9,7 +9,7 @@ import 'package:pvsfronend/pages/Orderdetails.dart';
 
 void main() => runApp(MaterialApp(
 
-  initialRoute:'/order',
+  initialRoute:'/signup',
   routes:{
     '/signup':(context)=>Signup(),
     '/login' : (context) =>Login(),

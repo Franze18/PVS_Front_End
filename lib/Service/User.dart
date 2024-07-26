@@ -9,7 +9,6 @@ class User{
     required this.password});
 
   Map<String, dynamic> toJson () => {
-
     'username' : username,
     'email' : email,
     'password' : password
