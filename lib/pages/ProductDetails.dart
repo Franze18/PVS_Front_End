@@ -1,27 +1,7 @@
-import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import '../Service/Product.dart';
 
-// Product Service
-class ProductService {
-  final String baseUrl;
-
-  ProductService(this.baseUrl);
-
-  Future<List<Product>> fetchProducts(String category) async {
-    final response = await http.get(Uri.parse(baseUrl));
-
-    if (response.statusCode == 200) {
-      List<dynamic> jsonData = json.decode(response.body);
-      return jsonData.map((json) => Product.fromJson(json)).toList();
-    } else {
-      throw Exception('Failed to load products');
-    }
-  }
-}
-
-// Dashboard Widget
 class Dashboard extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
@@ -35,7 +15,8 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    productService = ProductService('http://192.168.192.205:8080/api/v1/product/all'); // Replace with your backend URL
+    // Initialize ProductService with the correct URL
+    productService = ProductService('http://192.168.192.205:8080/api/v1/product/all');
     _fetchProducts();
   }
 
@@ -46,8 +27,12 @@ class _DashboardState extends State<Dashboard> {
         products = fetchedProducts;
       });
     } catch (e) {
-      // Handle error
+      // Handle error and provide feedback
       print('Error fetching products: $e');
+      // Optionally, show an error message to the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load products. Please try again.')),
+      );
     }
   }
 
@@ -115,10 +100,12 @@ class _DashboardState extends State<Dashboard> {
                       label: Text(category),
                       selected: selectedCategory == category,
                       onSelected: (isSelected) {
-                        setState(() {
-                          selectedCategory = category;
-                          _fetchProducts(); // Fetch products for the selected category
-                        });
+                        if (isSelected) {
+                          setState(() {
+                            selectedCategory = category;
+                            _fetchProducts(); // Fetch products for the selected category
+                          });
+                        }
                       },
                     ),
                   );
@@ -139,12 +126,13 @@ class _DashboardState extends State<Dashboard> {
                     fit: BoxFit.cover,
                   ),
                   title: Text(product.productName),
-                  subtitle: Text('₱${product.price.toStringAsFixed(2)}'),
+                  subtitle: Text('₱${product.price.toStringAsFixed(2)}\n${product.description}'),
+                  isThreeLine: true,
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProductDetails(product: product),
+                        builder: (context) => OrderDetails(product: product),
                       ),
                     );
                   },
@@ -157,24 +145,3 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 }
-
-// Placeholder for ProductDetails page
-class ProductDetails extends StatelessWidget {
-  final Product product;
-
-  ProductDetails({required this.product});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(product.productName),
-      ),
-      body: Center(
-        child: Text('Product details for ${product.productName}'),
-      ),
-    );
-  }
-}
-
-
