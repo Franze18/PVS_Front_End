@@ -108,7 +108,9 @@ class _CartState extends State<Cart> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
+
                 'Total Sales: ₱${calculateTotalSales().toStringAsFixed(2)}',
+
                 style: TextStyle(fontSize: 18.0),
               ),
               ElevatedButton(

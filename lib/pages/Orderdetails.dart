@@ -153,7 +153,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Total Sales: \$${totalAmount.toStringAsFixed(2)}',
+                'Total Sales: \₱${totalAmount.toStringAsFixed(2)}',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               ElevatedButton(
