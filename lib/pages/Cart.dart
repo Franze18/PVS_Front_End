@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(Cart());
-}
-
+import '../Service/Product.dart'; // Ensure this path is correct
 
 class Cart extends StatefulWidget {
   const Cart({Key? key}) : super(key: key);
 
   @override
-  State<Cart> createState() => _CartState();
+  _CartState createState() => _CartState();
 }
 
 class _CartState extends State<Cart> {
-  List<Product> cart = []; // Empty list, no products
+  List<Product> cart = [];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Get the list of products from the route arguments
+    final List<Product>? products = ModalRoute.of(context)?.settings.arguments as List<Product>?;
+    if (products != null) {
+      setState(() {
+        cart = products;
+      });
+    }
+  }
 
   double calculateTotalSales() {
     return cart.fold(0, (previousValue, element) => previousValue + element.price);
@@ -25,7 +33,7 @@ class _CartState extends State<Cart> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Checkout'),
-        content: Text('Total Sales: \$${calculateTotalSales().toStringAsFixed(2)}'),
+        content: Text('Total Sales: ₱${calculateTotalSales().toStringAsFixed(2)}'),
         actions: <Widget>[
           TextButton(
             child: Text('OK'),
@@ -68,67 +76,31 @@ class _CartState extends State<Cart> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.arrow_forward, color:Colors.black),
+            icon: Icon(Icons.arrow_forward, color: Colors.black),
             onPressed: () {
               Navigator.pushReplacementNamed(context, '/dashboard');
             },
           ),
         ],
       ),
-      drawer: Drawer(
-        child: Column(
-          children: [
-            UserAccountsDrawerHeader(
-              accountName: Text(
-                "Alice Guo",
-                style: TextStyle(color: Colors.black),
-              ),
-              accountEmail: Text("aliceguo@gmail.com",
-                  style: TextStyle(color: Colors.black)),
-              currentAccountPicture: CircleAvatar(
-                radius: 30.0,
-                backgroundImage: AssetImage('assets/profile.png'),
-              ),
-              decoration: BoxDecoration(color: Colors.white),
+      body: cart.isEmpty
+          ? Center(child: Text('Your cart is empty'))
+          : ListView.builder(
+        itemCount: cart.length,
+        itemBuilder: (context, index) {
+          final product = cart[index];
+          return ListTile(
+            leading: Image.network(
+              product.url,
+              width: 50,
+              height: 50,
+              fit: BoxFit.cover,
             ),
-            SizedBox(height: 10.0),
-            ElevatedButton.icon(
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/profile');
-              },
-              icon: Icon(
-                Icons.person,
-                color: Colors.black,
-              ),
-              label: Text(
-                'Profile',
-                style: TextStyle(color: Colors.black),
-              ),
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 100, vertical: 12),
-              ),
-            ),
-            SizedBox(height: 10.0),
-            ElevatedButton.icon(
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/login');
-              },
-              icon: Icon(
-                Icons.logout,
-                color: Colors.black,
-              ),
-              label: Text(
-                'Logout',
-                style: TextStyle(color: Colors.black),
-              ),
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 100, vertical: 12),
-              ),
-            ),
-          ],
-        ),
+            title: Text(product.productName),
+            subtitle: Text('₱${product.price.toStringAsFixed(2)}'),
+          );
+        },
       ),
-      body: Container(), // No content needed in the body
       bottomNavigationBar: BottomAppBar(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -136,7 +108,7 @@ class _CartState extends State<Cart> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                'Total Sales: \$${calculateTotalSales().toStringAsFixed(2)}',
+                'Total Sales: ₱${calculateTotalSales().toStringAsFixed(2)}',
                 style: TextStyle(fontSize: 18.0),
               ),
               ElevatedButton(
@@ -152,12 +124,3 @@ class _CartState extends State<Cart> {
     );
   }
 }
-
-class Product {
-  final String name;
-  final double price;
-
-  Product({required this.name, required this.price});
-}
-
-
