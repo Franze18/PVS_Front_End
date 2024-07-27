@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pvsfronend/config.dart';
+import 'package:pvsfronend/pages/ProductDetails.dart';
+import 'package:pvsfronend/pages/JerseyProductDetails.dart';
 import '../Service/Product.dart';
 
 class Dashboard extends StatefulWidget {
@@ -21,7 +23,7 @@ class _DashboardState extends State<Dashboard> {
     _fetchProducts();
   }
 
-  void _fetchProducts() async {
+  Future<void> _fetchProducts() async {
     try {
       final fetchedProducts = await productService.fetchProducts(selectedCategory);
       setState(() {
@@ -31,6 +33,10 @@ class _DashboardState extends State<Dashboard> {
       // Handle error
       print('Error fetching products: $e');
     }
+  }
+
+  Future<void> _onRefresh() async {
+    await _fetchProducts();
   }
 
   @override
@@ -63,9 +69,9 @@ class _DashboardState extends State<Dashboard> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.shopping_cart, color: Colors.black),
+            icon: Icon(Icons.history, color: Colors.black),
             onPressed: () {
-              Navigator.pushReplacementNamed(context, '/cart');
+              Navigator.pushNamed(context, '/transaction_history');
             },
           ),
         ],
@@ -109,29 +115,34 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: products.length,
-              itemBuilder: (context, index) {
-                final product = products[index];
-                return ListTile(
-                  leading: Image.network(
-                    product.url,
-                    height: 50,
-                    width: 50,
-                    fit: BoxFit.cover,
-                  ),
-                  title: Text(product.productName),
-                  subtitle: Text('₱${product.price.toStringAsFixed(2)}'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProductDetails(product: product),
-                      ),
-                    );
-                  },
-                );
-              },
+            child: RefreshIndicator(
+              onRefresh: _onRefresh,
+              child: ListView.builder(
+                itemCount: products.length,
+                itemBuilder: (context, index) {
+                  final product = products[index];
+                  return ListTile(
+                    leading: Image.network(
+                      product.url,
+                      height: 50,
+                      width: 50,
+                      fit: BoxFit.cover,
+                    ),
+                    title: Text(product.productName),
+                    subtitle: Text('₱${product.price.toStringAsFixed(2)}'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => product.category == 'Jersey'
+                              ? JerseyProductDetails(product: product)
+                              : ProductDetails(product: product),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           ),
         ],
@@ -139,55 +150,3 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 }
-
-// Placeholder for ProductDetails page
-class ProductDetails extends StatelessWidget {
-  final Product product;
-
-  ProductDetails({required this.product});
-
-  bool get isOrderButtonEnabled {
-    return selectedSizeIndex != -1 && // Size selected
-        selectedChipIndices.isNotEmpty && // At least one customization selected
-        numberOfOrder > 0; // Quantity is greater than 0
-  }
-
-  void _placeOrder() {
-    if (isOrderButtonEnabled) {
-      // Here you can handle the actual order placement logic
-
-      // Show confirmation
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Order placed successfully!'),
-          backgroundColor: Colors.green,
-        ),
-      );
-
-      // Navigate to cart or order confirmation page
-      Navigator.pushReplacementNamed(context, '/cart');
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please complete all required fields.'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(product.productName),
-      ),
-      body: Center(
-        child: Text('Product details for ${product.productName}'),
-      ),
-    );
-  }
-}
-
-
-
