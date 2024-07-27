@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import '../Service/Product.dart';
+import 'package:pvsfronend/Service/Product.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -128,14 +128,14 @@ class _DashboardState extends State<Dashboard> {
                   title: Text(product.productName),
                   subtitle: Text('₱${product.price.toStringAsFixed(2)}\n${product.description}'),
                   isThreeLine: true,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => OrderDetails(product: product),
-                      ),
-                    );
-                  },
+                  // onTap: () {
+                  //   Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => OrderDetails(product: product),
+                  //     ),
+                  //   );
+                  // },
                 );
               },
             ),
