@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:pvsfronend/config.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -21,7 +22,7 @@ class _LoginState extends State<Login> {
   Future<bool> login(LoginRequest loginRequest) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.192.205:8080/api/v1/auth/login'),
+        Uri.parse('${Config.baseUrl}/api/v1/auth/login'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

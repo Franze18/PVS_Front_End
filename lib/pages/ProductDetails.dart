@@ -1,8 +1,6 @@
-import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:pvsfronend/config.dart';
-import '../Service/Product.dart';
+import 'package:pvsfronend/Service/Product.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -17,7 +15,8 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    productService = ProductService('${Config.baseUrl}/api/v1/product/all');
+    // Initialize ProductService with the correct URL
+    productService = ProductService('http://192.168.192.205:8080/api/v1/product/all');
     _fetchProducts();
   }
 
@@ -28,8 +27,12 @@ class _DashboardState extends State<Dashboard> {
         products = fetchedProducts;
       });
     } catch (e) {
-      // Handle error
+      // Handle error and provide feedback
       print('Error fetching products: $e');
+      // Optionally, show an error message to the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load products. Please try again.')),
+      );
     }
   }
 
@@ -97,10 +100,12 @@ class _DashboardState extends State<Dashboard> {
                       label: Text(category),
                       selected: selectedCategory == category,
                       onSelected: (isSelected) {
-                        setState(() {
-                          selectedCategory = category;
-                          _fetchProducts(); // Fetch products for the selected category
-                        });
+                        if (isSelected) {
+                          setState(() {
+                            selectedCategory = category;
+                            _fetchProducts(); // Fetch products for the selected category
+                          });
+                        }
                       },
                     ),
                   );
@@ -121,15 +126,16 @@ class _DashboardState extends State<Dashboard> {
                     fit: BoxFit.cover,
                   ),
                   title: Text(product.productName),
-                  subtitle: Text('₱${product.price.toStringAsFixed(2)}'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProductDetails(product: product),
-                      ),
-                    );
-                  },
+                  subtitle: Text('₱${product.price.toStringAsFixed(2)}\n${product.description}'),
+                  isThreeLine: true,
+                  // onTap: () {
+                  //   Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => OrderDetails(product: product),
+                  //     ),
+                  //   );
+                  // },
                 );
               },
             ),
@@ -139,55 +145,3 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 }
-
-// Placeholder for ProductDetails page
-class ProductDetails extends StatelessWidget {
-  final Product product;
-
-  ProductDetails({required this.product});
-
-  bool get isOrderButtonEnabled {
-    return selectedSizeIndex != -1 && // Size selected
-        selectedChipIndices.isNotEmpty && // At least one customization selected
-        numberOfOrder > 0; // Quantity is greater than 0
-  }
-
-  void _placeOrder() {
-    if (isOrderButtonEnabled) {
-      // Here you can handle the actual order placement logic
-
-      // Show confirmation
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Order placed successfully!'),
-          backgroundColor: Colors.green,
-        ),
-      );
-
-      // Navigate to cart or order confirmation page
-      Navigator.pushReplacementNamed(context, '/cart');
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please complete all required fields.'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(product.productName),
-      ),
-      body: Center(
-        child: Text('Product details for ${product.productName}'),
-      ),
-    );
-  }
-}
-
-
-

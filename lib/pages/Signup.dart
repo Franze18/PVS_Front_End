@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:pvsfronend/config.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -19,7 +20,7 @@ class _SignupState extends State<Signup> {
 
   createAccount(String username, String email, String password) async {
     final response = await http.post(
-      Uri.parse('http://192.168.192.205:8080/api/v1/auth/register/user'),
+      Uri.parse('${Config.baseUrl}/api/v1/auth/register/user'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
