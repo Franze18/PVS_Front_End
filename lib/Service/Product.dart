@@ -24,13 +24,16 @@ class Product {
   String description;
   double price;
   String url;
+  String category;
 
   Product({
     required this.id,
     required this.productName,
     required this.description,
     required this.price,
-    required this.url});
+    required this.url,
+    required this.category
+  });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return switch(json) {
@@ -39,13 +42,15 @@ class Product {
       'productName': String productName,
       'description': String description,
       'price': double price,
-      'url': String url
+      'url': String url,
+      'category': String category
       } => Product(
           id: id,
           productName: productName,
           description: description,
           price: price,
-          url: url
+          url: url,
+          category: category
       ),
       _ => throw const FormatException('Failed to load products'),
     };
