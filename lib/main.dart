@@ -16,8 +16,6 @@ void main() => runApp(MaterialApp(
     '/login': (context) => Login(),
     '/dashboard': (context) => Dashboard(),
     '/cart': (context) => Cart(),
-    '/profile': (context) => Profile(),
-    '/order': (context) => OrderDetailsPage(),
     '/transaction_details': (context) {
       // Retrieve the product from the route arguments
       final Product product = ModalRoute.of(context)!.settings.arguments as Product;

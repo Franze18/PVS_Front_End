@@ -40,6 +40,7 @@ dependencies:
   flutter_product_carousel: ^0.0.4
   shared_preferences: ^2.2.3
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

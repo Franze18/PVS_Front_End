@@ -6,6 +6,25 @@ import 'package:pvsfronend/pages/ProductDetails.dart';
 import 'package:pvsfronend/pages/JerseyProductDetails.dart';
 import '../Service/Product.dart';
 
+// Product Service
+class ProductService {
+  final String baseUrl;
+
+  ProductService(this.baseUrl);
+
+  Future<List<Product>> fetchProducts(String category) async {
+    final response = await http.get(Uri.parse(baseUrl));
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonData = json.decode(response.body);
+      return jsonData.map((json) => Product.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load products');
+    }
+  }
+}
+
+// Dashboard Widget
 class Dashboard extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
@@ -76,6 +95,7 @@ class _DashboardState extends State<Dashboard> {
           ),
         ],
       ),
+      drawer: CustomDrawer(),
       body: Column(
         children: [
           Padding(
@@ -88,29 +108,6 @@ class _DashboardState extends State<Dashboard> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-              ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 16),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: ['Regular', 'NBA Cut', 'T-Shirt', 'Warmer', 'Polo Regular', 'Chinese Collar'].map((category) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    child: ChoiceChip(
-                      label: Text(category),
-                      selected: selectedCategory == category,
-                      onSelected: (isSelected) {
-                        setState(() {
-                          selectedCategory = category;
-                          _fetchProducts(); // Fetch products for the selected category
-                        });
-                      },
-                    ),
-                  );
-                }).toList(),
               ),
             ),
           ),
@@ -143,6 +140,50 @@ class _DashboardState extends State<Dashboard> {
                   );
                 },
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// CustomDrawer Widget
+class CustomDrawer extends StatefulWidget {
+  @override
+  _CustomDrawerState createState() => _CustomDrawerState();
+}
+
+class _CustomDrawerState extends State<CustomDrawer> {
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: Column(
+        children: [
+          UserAccountsDrawerHeader(
+            accountName: Text(
+              "Sample Name",
+              style: TextStyle(color: Colors.black),
+            ),
+            accountEmail: Text("example@gmail.com",
+                style: TextStyle(color: Colors.black)),
+            decoration: BoxDecoration(color: Colors.white),
+          ),
+          SizedBox(height: 10.0),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, '/login');
+            },
+            icon: Icon(
+              Icons.logout,
+              color: Colors.black,
+            ),
+            label: Text(
+              'Logout',
+              style: TextStyle(color: Colors.black),
+            ),
+            style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.symmetric(horizontal: 100, vertical: 12),
             ),
           ),
         ],

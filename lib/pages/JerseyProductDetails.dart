@@ -168,9 +168,17 @@ class _JerseyProductDetailsState extends State<JerseyProductDetails> {
                 ],
               ),
               SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: buyNowAndNavigate,
-                child: Text('Buy Now'),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black, // Set the button color to black
+                    foregroundColor: Colors.white, // Set the text color to white
+                  ),
+                  onPressed: buyNowAndNavigate,
+                  child: Text('Buy Now'),
+                ),
               ),
             ],
           ),
